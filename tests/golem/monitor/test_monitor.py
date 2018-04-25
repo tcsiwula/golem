@@ -37,10 +37,10 @@ class TestSystemMonitor(TestCase, testutils.PEP8MixIn):
         config['HOST'] = 'http://localhost/88881'
         config['SENDER_THREAD_TIMEOUT'] = 0.05
         self.monitor = SystemMonitor(meta_data, config)
-        self.monitor.start()
+        # Don't start sending thread here.
+        # Use monitor.sender_thread._send_one_message directly instead.
 
     def tearDown(self):
-        self.monitor.shut_down()
         del self.monitor
 
     def test_monitor_messages(self):
@@ -80,7 +80,7 @@ class TestSystemMonitor(TestCase, testutils.PEP8MixIn):
                 + 'DefaultHttpSender.post_json') \
                     as mock_send:
                 f()
-                time.sleep(0.005)
+                self.monitor.sender_thread._send_one_message()
                 self.assertEqual(mock_send.call_count, 1)
                 result = json.loads(mock_send.call_args[0][0])
                 expected_d = {
