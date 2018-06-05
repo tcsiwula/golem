@@ -21,6 +21,7 @@ class TimeoutException(JobException):
 
 
 class TaskThread(threading.Thread):
+    # pylint:disable=too-many-arguments
     def __init__(self, task_computer: 'TaskComputer', subtask_id,
                  working_directory, src_code, extra_data, short_desc, res_path,
                  tmp_path, timeout=0) -> None:

@@ -6,6 +6,69 @@ from golem.task.taskbase import Task
 from golem.testutils import TempDirFixture
 
 
+class DummyTask(Task):
+    def initialize(self, dir_manager):
+        pass
+
+    def query_extra_data(self, perf_index, num_cores, node_id, node_name):
+        pass
+
+    def short_extra_data_repr(self, extra_data):
+        pass
+
+    def needs_computation(self):
+        pass
+
+    def finished_computation(self):
+        pass
+
+    def computation_finished(self, subtask_id, task_result, result_type,
+                             verification_finished):
+        pass
+
+    def computation_failed(self, subtask_id):
+        pass
+
+    def verify_subtask(self, subtask_id):
+        pass
+
+    def verify_task(self):
+        pass
+
+    def get_total_tasks(self):
+        pass
+
+    def get_active_tasks(self):
+        pass
+
+    def get_tasks_left(self):
+        pass
+
+    def restart(self):
+        pass
+
+    def restart_subtask(self, subtask_id):
+        pass
+
+    def abort(self):
+        pass
+
+    def get_progress(self):
+        pass
+
+    def update_task_state(self, task_state):
+        pass
+
+    def get_trust_mod(self, subtask_id):
+        pass
+
+    def add_resources(self, resources):
+        pass
+
+    def copy_subtask_results(self, subtask_id, old_subtask_info, results):
+        pass
+
+
 class BenchmarkRunnerFixture(TempDirFixture):
     def _success(self):
         """Instance success_callback."""
@@ -18,14 +81,13 @@ class BenchmarkRunnerFixture(TempDirFixture):
     def setUp(self):
         super().setUp()
         self.benchmark = mock.MagicMock()
-        with mock.patch.multiple(Task, __abstractmethods__=frozenset()):
-            self.instance = benchmarkrunner.BenchmarkRunner(
-                task=Task(None, None, None),
-                root_path=self.tempdir,
-                success_callback=lambda: self._success(),
-                error_callback=lambda *args: self._error(args),
-                benchmark=self.benchmark,
-            )
+        self.instance = benchmarkrunner.BenchmarkRunner(
+            task=DummyTask(None, None, None),
+            root_path=self.tempdir,
+            success_callback=self._success,
+            error_callback=self._error,
+            benchmark=self.benchmark,
+        )
 
 
 class TestBenchmarkRunner(BenchmarkRunnerFixture):
@@ -188,11 +250,11 @@ class TestBenchmarkRunnerIsSuccess(BenchmarkRunnerFixture):
         assert not self.instance.is_success(self.task_thread)
 
 
-class WrongTask(Task):
+class WrongTask(DummyTask):
     def query_extra_data(*args, **kwargs):
         raise ValueError("Wrong task")
 
-@mock.patch.multiple(WrongTask, __abstractmethods__=frozenset())
+
 class BenchmarkRunnerWrongTaskTest(TempDirFixture):
 
     def test_run_with_error(self):

@@ -98,7 +98,8 @@ class LocalComputer:
         else:
             self.computation_failure(task_thread)
 
-    def is_success(self, task_thread: TaskThread) -> bool:
+    @staticmethod
+    def is_success(task_thread: TaskThread) -> bool:
         return \
             not task_thread.error \
             and task_thread.result \
