@@ -251,7 +251,7 @@ class TestBenchmarkRunnerIsSuccess(BenchmarkRunnerFixture):
 
 
 class WrongTask(DummyTask):
-    def query_extra_data(*args, **kwargs):
+    def query_extra_data(self, perf_index, num_cores, node_id, node_name):
         raise ValueError("Wrong task")
 
 

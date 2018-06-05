@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple, Union
 
 import requests
 from golem.docker.job import DockerJob
@@ -53,6 +53,8 @@ class DockerTaskThread(TaskThread):
 
         self.work_dir_path: Path = Path(self.tmp_path) / "work"
         self.output_dir_path: Path = Path(self.tmp_path) / "output"
+
+        self.result: Union[None, Dict[str, Any], Tuple[Dict[str, Any], int]]
 
     def run(self) -> None:
         try:
@@ -112,7 +114,7 @@ class DockerTaskThread(TaskThread):
 
         return estm_mem
 
-    def _task_computed(self, estm_mem: int) -> None:
+    def _task_computed(self, estm_mem: Optional[int]) -> None:
         out_files = [
             str(path) for path in self.output_dir_path.glob("**/*")
             if path.is_file()

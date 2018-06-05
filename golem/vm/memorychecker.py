@@ -33,6 +33,7 @@ class MemoryCheckerThread(Thread):
             time.sleep(0.5)
 
 
+# pylint: disable=too-few-public-methods
 class MemoryChecker:
     _thread: Optional[MemoryCheckerThread]
 
@@ -47,7 +48,7 @@ class MemoryChecker:
     def __exit__(self, *exc) -> bool:
         if self._thread:
             self._thread.stop()
-        pass
+        return False
 
     @property
     def estm_mem(self) -> Optional[int]:
