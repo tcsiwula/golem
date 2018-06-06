@@ -6,7 +6,7 @@ import time
 
 class MemoryCheckerThread(Thread):
     def __init__(self) -> None:
-        super(MemoryChecker, self).__init__()
+        super().__init__()
         self.start_mem: int = psutil.virtual_memory().used
         self.max_mem: int = 0
         self.min_mem: int = self.start_mem
@@ -37,7 +37,7 @@ class MemoryCheckerThread(Thread):
 class MemoryChecker:
     _thread: Optional[MemoryCheckerThread]
 
-    def __init__(self, do_check: bool) -> None:
+    def __init__(self, do_check: bool = True) -> None:
         self._thread = MemoryCheckerThread() if do_check else None
 
     def __enter__(self) -> 'MemoryChecker':
