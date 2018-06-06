@@ -215,7 +215,7 @@ class Task(abc.ABC):
     @abc.abstractmethod
     def query_extra_data(self, perf_index: float, num_cores: int = 1,
                          node_id: Optional[str] = None,
-                         node_name: Optional[str] = None) -> ExtraData:
+                         node_name: Optional[str] = None) -> 'ExtraData':
         """ Called when a node asks with given parameters asks for a new
         subtask to compute.
         :param perf_index: performance that given node declares
